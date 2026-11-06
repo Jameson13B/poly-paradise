@@ -1,0 +1,24 @@
+{
+  "name": "poly-paradise",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch server/index.ts & vite --host",
+    "build": "vite build",
+    "start": "node server/index.ts",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.9.0",
+    "@types/node": "^22.10.0",
+    "@types/qrcode": "^1.5.5",
+    "@types/ws": "^8.5.13",
+    "preact": "^10.25.0",
+    "qrcode": "^1.5.4",
+    "typescript": "^5.8.0",
+    "vite": "^6.0.0"
+  }
+}
