@@ -16,7 +16,7 @@ Open the **Network** URL that Vite prints (not localhost) so phones on the same
 Wi-Fi can scan the table's QR code. Browsers only offer to install the PWA on
 https (or localhost), so test installing on a deployed copy. `npm run build && npm start` serves the
 production build. The Docker image serves HTTP on port 80, answers `/up`, and
-keeps its SQLite database in `/data`.
+keeps its SQLite database in `/storage` (where ONCE mounts its volume).
 
 ## How it fits together
 
