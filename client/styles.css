@@ -40,12 +40,29 @@ button {
   touch-action: manipulation;
 }
 
-.polyfield {
+.polyfield,
+.scene3d.world {
   position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
   z-index: 0;
+}
+
+.scene3d {
+  display: block;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.5s;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.scene3d.ready {
+  opacity: 1;
+}
+.scene3d.world {
+  pointer-events: none;
 }
 
 .shell {
@@ -430,6 +447,15 @@ p {
 .hero {
   display: grid;
   gap: 16px;
+}
+.island-window {
+  display: none;
+}
+.world-3d .island-window {
+  display: block;
+  height: clamp(150px, 24vh, 300px);
+  margin: -8px 0 -12px;
+  grid-column: 1 / -1;
 }
 .hero > div {
   text-shadow: 0 1px 12px rgb(5 10 25 / 0.7);
@@ -875,6 +901,11 @@ p {
   padding: 8px;
   touch-action: manipulation;
 }
+.board3d {
+  width: min(100%, 560px, 64vh);
+  aspect-ratio: 1 / 0.82;
+  cursor: pointer;
+}
 .board .pip {
   fill: #e6ecff;
 }
@@ -988,6 +1019,10 @@ p {
 }
 .waters.mini {
   width: min(62%, 300px, 34vh);
+}
+.waters .sea {
+  aspect-ratio: 1 / 0.8;
+  cursor: pointer;
 }
 .waters .grid {
   width: 100%;

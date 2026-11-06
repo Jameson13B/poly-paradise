@@ -23,7 +23,8 @@ keeps its SQLite database in `/storage` (where ONCE mounts its volume).
 ```
 shared/   protocol types + game engines (pure functions, run on the server)
 server/   HTTP + WebSocket, rooms, SQLite (node:sqlite), Elo ratings
-client/   Preact PWA: living low-poly backdrop, lobby, tables, game views
+client/   Preact PWA: lobby, tables, game views
+  three/  low-poly 3D scenes (three.js): the island, Fleet's sea, the Dots board
 ```
 
 - **Server is authoritative.** Clients send intents (`move`), the server validates
@@ -44,6 +45,13 @@ client/   Preact PWA: living low-poly backdrop, lobby, tables, game views
   button; wider screens show everything at once.
 - **Reconnects are seamless.** A phone that sleeps or a page that refreshes gets put
   back at its table. Disconnecting never forfeits; pressing Leave does.
+- **Low-poly 3D, crisp UI.** The world and the boards are flat-shaded three.js scenes;
+  text, buttons and forms stay HTML on top. three.js loads after first paint, scenes
+  sleep when nothing moves or the tab is hidden, and devices without WebGL get the
+  flat 2D boards and backdrop instead.
+- **The lobby is the island.** It frames itself in the lobby's `.island-window`, with a
+  figure at the campfire for each person online and a stall for each game. At a table it
+  drifts off to rest under the board.
 - **The backdrop shifts hue** toward whichever game is on the table, so the lobby and
   the games share one world.
 - **Games so far:** Dots & Boxes (2–4 players) and Fleet (2 players, 8×8, ships of

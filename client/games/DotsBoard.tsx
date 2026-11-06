@@ -2,6 +2,10 @@ import { scores, type DotsMove, type DotsState } from '../../shared/games/dots-a
 import type { RoomView } from '../../shared/protocol.ts';
 import { Gem, SEAT_HUES, seatColor } from '../art.tsx';
 import { send } from '../net.ts';
+import { Canvas3D } from '../three/Canvas3D.tsx';
+import type { DotsProps } from '../three/dots.ts';
+
+const loadDots = () => import('../three/dots.ts');
 
 const G = 64;
 const PAD = 18;
@@ -10,9 +14,31 @@ export function DotsBoard({ room }: { room: RoomView }) {
   const s = room.view as DotsState;
   const myTurn = room.status === 'playing' && s.turn === room.you;
   const sc = scores(s);
+  const play = (m: DotsMove) => myTurn && send({ t: 'move', move: m });
+  const flatBoard = <FlatBoard s={s} myTurn={myTurn} play={play} />;
+
+  const turnName = room.seats[s.turn]?.name;
+
+  return (
+    <div class="dots" style={{ '--me': room.you >= 0 ? seatColor(room.you) : '#fff' }}>
+      <ul class="scores">
+        {room.seats.map((p, i) => (
+          <li class={`facet${room.status === 'playing' && s.turn === i ? ' turn' : ''}${p.connected ? '' : ' away'}`} style={{ '--seat': seatColor(i) }}>
+            <Gem seed={p.seed} size={28} />
+            <span class="name">{i === room.you ? 'You' : p.name}</span>
+            <b>{sc[i]}</b>
+          </li>
+        ))}
+      </ul>
+      <p class="turn-line">{room.status !== 'playing' ? '' : myTurn ? 'Your move' : `${turnName}'s move`}</p>
+      <Canvas3D load={loadDots} props={{ s, myTurn, me: room.you, onPlay: play } satisfies DotsProps} class="board3d" label="Dots and boxes board" fallback={flatBoard} />
+    </div>
+  );
+}
+
+function FlatBoard({ s, myTurn, play }: { s: DotsState; myTurn: boolean; play: (m: DotsMove) => void }) {
   const size = (n: number) => n * G + PAD * 2;
   const isLast = (m: DotsMove) => s.last?.k === m.k && s.last.r === m.r && s.last.c === m.c;
-  const play = (m: DotsMove) => myTurn && send({ t: 'move', move: m });
 
   const line = (m: DotsMove, owner: number) => {
     const x1 = PAD + m.c * G;
@@ -33,20 +59,7 @@ export function DotsBoard({ room }: { room: RoomView }) {
   for (let r = 0; r <= s.h; r++) for (let c = 0; c < s.w; c++) lines.push(line({ k: 'h', r, c }, s.hl[r * s.w + c]));
   for (let r = 0; r < s.h; r++) for (let c = 0; c <= s.w; c++) lines.push(line({ k: 'v', r, c }, s.vl[r * (s.w + 1) + c]));
 
-  const turnName = room.seats[s.turn]?.name;
-
   return (
-    <div class="dots" style={{ '--me': room.you >= 0 ? seatColor(room.you) : '#fff' }}>
-      <ul class="scores">
-        {room.seats.map((p, i) => (
-          <li class={`facet${room.status === 'playing' && s.turn === i ? ' turn' : ''}${p.connected ? '' : ' away'}`} style={{ '--seat': seatColor(i) }}>
-            <Gem seed={p.seed} size={28} />
-            <span class="name">{i === room.you ? 'You' : p.name}</span>
-            <b>{sc[i]}</b>
-          </li>
-        ))}
-      </ul>
-      <p class="turn-line">{room.status !== 'playing' ? '' : myTurn ? 'Your move' : `${turnName}'s move`}</p>
       <svg class="board panel facet" viewBox={`0 0 ${size(s.w)} ${size(s.h)}`} role="img" aria-label="Dots and boxes board">
         {s.boxes.map((owner, i) => {
           if (owner < 0) return null;
@@ -68,6 +81,5 @@ export function DotsBoard({ room }: { room: RoomView }) {
           return <polygon class="pip" points={`${x},${y - 6} ${x + 6},${y} ${x},${y + 6} ${x - 6},${y}`} />;
         })}
       </svg>
-    </div>
   );
 }

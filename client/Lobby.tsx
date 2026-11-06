@@ -40,6 +40,8 @@ export function Lobby({ net, onInstall }: { net: NetState; onInstall: () => void
         <div class="pane pane-play">
           <PulseBadge pulse={net.pulse} />
           <section class="hero">
+            {/* The 3D island frames itself inside this space. */}
+            <div class="island-window" aria-hidden="true" />
             <div>
               <p class="eyebrow">{me.stats.some((s) => s.played > 0) ? `Welcome back, ${me.name}` : `Welcome, ${me.name}`}</p>
               <h2>Pull up a seat.</h2>

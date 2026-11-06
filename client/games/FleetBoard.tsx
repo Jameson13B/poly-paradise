@@ -3,6 +3,10 @@ import { cells as cellsOf, fits, SIZE, type FleetMove, type FleetView, type Mark
 import type { RoomView } from '../../shared/protocol.ts';
 import { Gem, rng, SEAT_HUES, seatColor } from '../art.tsx';
 import { send } from '../net.ts';
+import { Canvas3D } from '../three/Canvas3D.tsx';
+import type { SeaProps } from '../three/sea.ts';
+
+const loadSea = () => import('../three/sea.ts');
 
 const C = 40;
 const W = SIZE * C;
@@ -70,7 +74,7 @@ function Placing({ v, you, foeName }: { v: FleetView; you: number; foeName: stri
       <p class={`muted small fleet-hint${nope ? ' nope' : ''}`}>
         {locked ? 'Your ships stay hidden until they are hit.' : nope || (sel < 0 ? 'Tap a ship to pick it up.' : 'Tap water to move it, or tap the ship again to turn it.')}
       </p>
-      <Waters ships={v.mine} hue={SEAT_HUES[you]} marks={v.incoming} selected={locked ? -1 : sel} onTap={locked ? undefined : tap} seed={you + 11} label="Your waters" />
+      <Waters ships={v.mine} hue={SEAT_HUES[you]} marks={v.incoming} selected={locked ? -1 : sel} onTap={locked ? undefined : tap} seed={you + 11} meHue={SEAT_HUES[you]} label="Your waters" />
       {!locked && (
         <div class="row fleet-actions">
           <button class="btn ghost" onClick={() => (setSel(-1), move({ k: 'shuffle' }))}>
@@ -105,6 +109,7 @@ function Battle({ v, you, foe, foeName, playing }: { v: FleetView; you: number; 
           seed={foe + 31}
           label={`${foeName}'s waters`}
           live={myTurn}
+          meHue={SEAT_HUES[you]}
         />
         <Waters
           ships={v.mine}
@@ -114,6 +119,7 @@ function Battle({ v, you, foe, foeName, playing }: { v: FleetView; you: number; 
           fresh={v.last?.seat === foe ? v.last.i : -1}
           seed={you + 11}
           label="Your waters"
+          meHue={SEAT_HUES[you]}
           mini
         />
       </div>
@@ -141,13 +147,25 @@ interface WatersProps {
   fresh?: number;
   live?: boolean;
   mini?: boolean;
+  meHue: number;
   onTap?: (r: number, c: number) => void;
 }
 
-function Waters({ ships, sunk = [], hue, marks, seed, label, selected = -1, fresh = -1, live, mini, onTap }: WatersProps) {
-  const r = rng(seed);
+function Waters(props: WatersProps) {
+  const { ships, sunk = [], hue, marks, seed, label, selected = -1, fresh = -1, live = false, mini, meHue, onTap } = props;
+  const sea: SeaProps = { ships, sunk, hue, marks, seed, selected, fresh, live, meHue, onTap };
   return (
     <figure class={`waters${mini ? ' mini' : ''}${live ? ' live' : ''}`}>
+      <Canvas3D load={loadSea} props={sea} class="sea" label={label} fallback={<FlatWaters {...props} />} />
+      <figcaption class="muted small">{label}</figcaption>
+    </figure>
+  );
+}
+
+/** The flat board, for devices without WebGL. */
+function FlatWaters({ ships, sunk = [], hue, marks, seed, label, selected = -1, fresh = -1, live, onTap }: WatersProps) {
+  const r = rng(seed);
+  return (
       <svg class="grid panel facet" viewBox={`-4 -4 ${W + 8} ${W + 8}`} role="img" aria-label={label}>
         {/* Water: two triangles a cell, each a slightly different depth. */}
         {marks.map((_, i) => {
@@ -180,8 +198,6 @@ function Waters({ ships, sunk = [], hue, marks, seed, label, selected = -1, fres
             />
           ))}
       </svg>
-      <figcaption class="muted small">{label}</figcaption>
-    </figure>
   );
 }
 
