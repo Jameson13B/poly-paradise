@@ -46,6 +46,9 @@ client/   Preact PWA: living low-poly backdrop, lobby, tables, game views
   back at its table. Disconnecting never forfeits; pressing Leave does.
 - **The backdrop shifts hue** toward whichever game is on the table, so the lobby and
   the games share one world.
+- **Games so far:** Dots & Boxes (2–4 players) and Fleet (2 players, 8×8, ships of
+  4-3-3-2-2). In Fleet, each seat only ever receives its own ships plus what its shots
+  have revealed. The other fleet is sent once the game ends.
 - **Adding a game:** write an `Engine` in `shared/games/`, register it in
   `shared/games/index.ts`, add a view in `client/games/`.
 
@@ -58,12 +61,11 @@ client/   Preact PWA: living low-poly backdrop, lobby, tables, game views
 
 ## Roadmap
 
-1. **Fleet** (turn-based, hidden info) to prove out per-seat views.
-2. **Realtime engine path** for Paddle and Stack Duel: server tick loop, input
+1. **Realtime engine path** for Paddle and Stack Duel: server tick loop, input
    messages, client interpolation. Paddle spans two screens, so each device renders its half.
-3. **Account recovery**: there's no password reset yet. Options are an optional email
+2. **Account recovery**: there's no password reset yet. Options are an optional email
    address, or passkeys once the app is on its real domain.
-4. **Rivals**: head-to-head records on profiles ("you're 4–2 against Mossy Heron").
-5. **Challenges**: weekly, opt-in ("win a game of Dots without the first box"),
+3. **Rivals**: head-to-head records on profiles ("you're 4–2 against Mossy Heron").
+4. **Challenges**: weekly, opt-in ("win a game of Dots without the first box"),
    with cosmetic gem facets/colors as rewards.
-6. **Spectators**: join a running table by code to watch.
+5. **Spectators**: join a running table by code to watch.
