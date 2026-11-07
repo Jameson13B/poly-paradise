@@ -234,6 +234,9 @@ export function create(canvas: HTMLCanvasElement, first: WorldProps): Scene3D<Wo
       f.obj.position.set(x + fire.position.x, 0.72 + Math.abs(Math.sin(time * 2.2 + f.ph)) * 0.08, z + fire.position.z);
       f.obj.lookAt(fire.position.x, f.obj.position.y, fire.position.z);
     }
+    // Far off behind a game, the moon and clouds would float between the boards.
+    moon.visible = awayK < 0.5;
+    for (const c of clouds) c.visible = awayK < 0.5;
     for (const c of clouds) {
       c.position.x += dt * 0.8;
       if (c.position.x > 70) c.position.x = -70;

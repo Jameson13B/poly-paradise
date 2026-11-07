@@ -32,6 +32,8 @@ export interface RoomView {
   /** Your seat index, or -1. */
   you: number;
   view: unknown;
+  /** Server clock when this was sent, so realtime games can correct for device clock skew. */
+  now: number;
   outcome: Outcome | null;
   /** Player ids who asked for a rematch. */
   rematch: string[];

@@ -1078,6 +1078,67 @@ p {
   }
 }
 
+/* Stack Duel */
+.stack {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  justify-items: center;
+}
+.stack .scores {
+  flex-wrap: nowrap;
+  max-width: 100%;
+}
+.stack .scores li {
+  min-width: 0;
+}
+.stack .scores .name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.stack-pad {
+  position: relative;
+  width: 100%;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.stack-pad .scene3d,
+.flat-stack {
+  display: block;
+  width: 100%;
+  height: clamp(360px, calc(100dvh - 230px), 860px);
+  touch-action: none;
+}
+.countdown {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 5rem;
+  font-weight: 900;
+  text-shadow: 0 4px 24px rgb(5 10 25 / 0.8);
+  pointer-events: none;
+  animation: arrive 0.3s ease-out;
+}
+.countdown.small {
+  font-size: 2.2rem;
+}
+.key-hint {
+  display: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .key-hint {
+    display: inline;
+  }
+  .touch-hint {
+    display: none;
+  }
+}
+
 /* Tablets and up */
 @media (min-width: 640px) {
   .shell {

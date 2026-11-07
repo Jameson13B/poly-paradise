@@ -57,6 +57,11 @@ client/   Preact PWA: lobby, tables, game views
 - **Games so far:** Dots & Boxes (2–4 players) and Fleet (2 players, 8×8, ships of
   4-3-3-2-2). In Fleet, each seat only ever receives its own ships plus what its shots
   have revealed. The other fleet is sent once the game ends.
+- **Stack Duel** is realtime but still uses the turn-based `Engine`. Each device runs its own
+  falling-blocks board so controls are instant, and sends each landed piece. The server
+  checks it with the same shared `lock()` code, clears rows, and sends junk to the rival.
+  Both players get the same piece order from a shared seed. Junk enters only on pieces the
+  client has acknowledged, so the two copies of a board never disagree.
 - **Adding a game:** write an `Engine` in `shared/games/`, register it in
   `shared/games/index.ts`, add a view in `client/games/`.
 
@@ -69,8 +74,8 @@ client/   Preact PWA: lobby, tables, game views
 
 ## Roadmap
 
-1. **Realtime engine path** for Paddle and Stack Duel: server tick loop, input
-   messages, client interpolation. Paddle spans two screens, so each device renders its half.
+1. **Paddle**: a server tick loop for one shared ball, with input messages and client
+   interpolation. Paddle spans two screens, so each device renders its half.
 2. **Account recovery**: there's no password reset yet. Options are an optional email
    address, or passkeys once the app is on its real domain.
 3. **Rivals**: head-to-head records on profiles ("you're 4–2 against Mossy Heron").

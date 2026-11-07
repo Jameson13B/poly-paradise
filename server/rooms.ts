@@ -60,6 +60,7 @@ function viewFor(room: Room, c: Conn): RoomView {
     view: room.state == null ? null : ENGINES[room.game].view(room.state, you),
     outcome: room.outcome,
     rematch: [...room.rematch],
+    now: Date.now(),
   };
 }
 
