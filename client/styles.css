@@ -1078,28 +1078,33 @@ p {
   }
 }
 
-/* Stack Duel */
-.stack {
+/* Stack Duel and Paddle */
+.stack,
+.paddle {
   width: 100%;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 8px;
   justify-items: center;
 }
-.stack .scores {
+.stack .scores,
+.paddle .scores {
   flex-wrap: nowrap;
   max-width: 100%;
 }
-.stack .scores li {
+.stack .scores li,
+.paddle .scores li {
   min-width: 0;
 }
-.stack .scores .name {
+.stack .scores .name,
+.paddle .scores .name {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.stack-pad {
+.stack-pad,
+.paddle-pad {
   position: relative;
   width: 100%;
   touch-action: none;
@@ -1107,7 +1112,9 @@ p {
   user-select: none;
 }
 .stack-pad .scene3d,
-.flat-stack {
+.paddle-pad .scene3d,
+.flat-stack,
+.flat-court {
   display: block;
   width: 100%;
   height: clamp(360px, calc(100dvh - 230px), 860px);

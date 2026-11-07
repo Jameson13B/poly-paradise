@@ -62,6 +62,11 @@ client/   Preact PWA: lobby, tables, game views
   checks it with the same shared `lock()` code, clears rows, and sends junk to the rival.
   Both players get the same piece order from a shared seed. Junk enters only on pieces the
   client has acknowledged, so the two copies of a board never disagree.
+- **Paddle** spans two phones laid top to top. The device whose half the ball is on runs it,
+  so returning a shot never lags. When the ball crosses the middle, the server hands it to the
+  other device, mirrored (players face each other) and advanced by the time it spent in
+  transit. The server keeps score, ignores stale handoffs, and calls a point if a device
+  holds the ball too long (it fell asleep).
 - **Adding a game:** write an `Engine` in `shared/games/`, register it in
   `shared/games/index.ts`, add a view in `client/games/`.
 
@@ -74,11 +79,9 @@ client/   Preact PWA: lobby, tables, game views
 
 ## Roadmap
 
-1. **Paddle**: a server tick loop for one shared ball, with input messages and client
-   interpolation. Paddle spans two screens, so each device renders its half.
-2. **Account recovery**: there's no password reset yet. Options are an optional email
+1. **Account recovery**: there's no password reset yet. Options are an optional email
    address, or passkeys once the app is on its real domain.
-3. **Rivals**: head-to-head records on profiles ("you're 4–2 against Mossy Heron").
-4. **Challenges**: weekly, opt-in ("win a game of Dots without the first box"),
+2. **Rivals**: head-to-head records on profiles ("you're 4–2 against Mossy Heron").
+3. **Challenges**: weekly, opt-in ("win a game of Dots without the first box"),
    with cosmetic gem facets/colors as rewards.
-5. **Spectators**: join a running table by code to watch.
+4. **Spectators**: join a running table by code to watch.
